@@ -1,0 +1,29 @@
+name: Java CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 拉取代码
+      uses: actions/checkout@v4
+
+    - name: 设置JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        cache: maven
+
+    - name: 编译并检查代码规范（Checkstyle）
+      run: mvn clean checkstyle:checkstyle compile
+
+    - name: 运行单元测试（JUnit）
+      run: mvn test
+
+    - name: 打包应用
+      run: mvn package
